@@ -1,0 +1,518 @@
+#Lap01-01
+##Program.cs
+
+	static void Main(string[] args)
+        {
+            Random random = new Random();
+            int targetNumber = random.Next(100, 1000);
+            string targetString = targetNumber.ToString();
+            int attempt = 1, MAX_GUESS = 7;
+            String guess, feedback = "";
+            while (feedback != "+++" && attempt <= MAX_GUESS)
+            {
+                Console.Write("Nhap lan doan thu {0}: ", attempt);
+                guess = Console.ReadLine();
+                feedback = GetFeedBack(targetString, guess);
+                Console.WriteLine("Phan Hoi Tu May Tinh: {0}", feedback);
+                attempt++;
+            }
+            Console.WriteLine("Nguoi choi da doan {0} lan.Tro choi ket thuc!", attempt - 1);
+            if (feedback != "+++")
+                Console.WriteLine("Nguoi choi thua cuoc. So can doan la: {0}", targetNumber);
+            else
+                Console.WriteLine("Nguoi choi thang cuoc!", attempt);
+            Console.ReadLine();
+        }
+        static string GetFeedBack(string target, string guess)
+        {
+            string feedback = "";
+            for (int i = 0; i < target.Length; i++)
+            {
+                if (target[i] == guess[i])
+                    feedback += "+";
+                else if (target.Contains(guess[i].ToString()))
+                    feedback += "?";
+            }
+            return feedback;
+        }
+		
+#Lap01-02 
+##Program.cs
+
+	static void themSinhVien(List<Student> students)
+        {
+            Console.WriteLine("Nhap Thong tin sinh vien can them");
+            Student student= new Student();
+            student.Input();
+            students.Add(student);
+            Console.WriteLine("Them Thanh Cong");
+        }
+        static void xuatDanhsachSinhVien(List<Student> students)
+        {
+            if (students.Count == 0)
+            {
+                Console.WriteLine("Danh Sach Sinh Vien Rong");
+                return;
+            }
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Sinh Vien -------------");
+            students.ForEach(student =>
+            {
+                student.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatSinhVienCNTT(List<Student> students)
+        {
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Sinh Vien Thuoc Khoa CNT -------------");
+            students.ForEach(student =>
+            {
+                if(student.Faculty == "CNTT") student.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatSinhVienDBTLonHon5(List<Student> students)
+        {
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Sinh Vien Co DTB >= 5 -------------");
+            students.ForEach(student =>
+            {
+                if (student.AverageScore >= 5) student.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatSinhVienDTBTangDan(List<Student> students)
+        {
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Sinh Vien Co DTB Tang Dan -------------");
+            students.OrderBy(s => s.AverageScore).ToList().ForEach(student =>
+            {
+                student.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatSVKhoaCNTTVaDTBLonHon5(List<Student> students)
+        {
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Sinh Vien Thuoc Khoa CNTT Va DTB >=5 -------------");
+            students.ForEach(student =>
+            {
+                if(student.Faculty == "CNTT" && student.AverageScore >= 5) student.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatSVCoDTBCaoNhatVaThuocKhoaCNTT(List<Student> students)
+        {
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Sinh Vien Co DTB Cao Nhat Va Thuoc Khoa CNTT -------------");
+            float maxDiem = students.Max(student => student.AverageScore);
+            students.ForEach(student =>
+            {
+               if(student.AverageScore == maxDiem && student.Faculty == "CNTT") student.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatSoLuongXepLoai(List<Student> students)
+        {
+            Console.WriteLine("------------- So Luong cua tung xep loai trong danh sach sinh vien -------------");
+            int cntXuatSac = students.Count(student => student.AverageScore > 9);
+            int cntGioi = students.Count(student => student.AverageScore <= 9 && student.AverageScore > 8);
+            int cntKha = students.Count(student => student.AverageScore <= 8 && student.AverageScore > 7);
+            int cntTrungBinh = students.Count(student => student.AverageScore <= 7 && student.AverageScore > 5);
+            int cntYeu = students.Count(student => student.AverageScore <= 5 && student.AverageScore > 4);
+            int cntKem = students.Count(student => student.AverageScore <= 4);
+            Console.WriteLine("Xuat Sac: {0}", cntXuatSac);
+            Console.WriteLine("Gioi: {0}", cntGioi);
+            Console.WriteLine("Kha: {0}", cntKha);
+            Console.WriteLine("Trung Binh: {0}", cntTrungBinh);
+            Console.WriteLine("Yeu: {0}", cntYeu);
+            Console.WriteLine("Kem: {0}", cntKem);
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void Main(string[] args)
+        {
+            List<Student> studentList = new List<Student>();
+            bool exit = false;
+
+            while (!exit)
+            {
+                Console.WriteLine("================== Menu =====================");
+                Console.WriteLine("1. Them sinh vien");
+                Console.WriteLine("2. Hien thi danh sach sinh vien");
+                Console.WriteLine("3. Thong tin sinh vien thuoc khoa CNTT");
+                Console.WriteLine("4. Thong tin sinh vien co DTB >= 5");
+                Console.WriteLine("5. Danh sach sinh vien sap xep theo diem TB tang dan");
+                Console.WriteLine("6. Danh sach sinh vien co diem TB >= 5 va thuoc khoa CNTT");
+                Console.WriteLine("7. Xuat ra danh sach sinh vien co diem trung binh cao nhat va thuoc khoa CNTT");
+                Console.WriteLine("8. So Luong cua tung xep loai trong danh sach sinh vien");
+                Console.WriteLine("0. Thoat");
+                Console.WriteLine("Chon chuc nang (0-8):");
+                Console.WriteLine("==============================================");
+                string choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "0":
+                        exit = true;
+                        break;
+                    case "1":
+                        themSinhVien(studentList);
+                        break;
+                    case "2":
+                        xuatDanhsachSinhVien(studentList);
+                        break;
+                    case "3":
+                        xuatSinhVienCNTT(studentList);
+                        break;
+                    case "4":
+                        xuatSinhVienDBTLonHon5(studentList);
+                        break;
+                    case "5":
+                        xuatSinhVienDTBTangDan(studentList);
+                        break;
+                    case "6":
+                        xuatSVKhoaCNTTVaDTBLonHon5(studentList);
+                        break;
+                    case "7":
+                        xuatSVCoDTBCaoNhatVaThuocKhoaCNTT(studentList);
+                        break;
+                    case "8":
+                        xuatSoLuongXepLoai(studentList);
+                        break;
+                    default:
+                    {
+                            Console.WriteLine("Khong co lua chon nay , vui long nhap lai");
+                            break;
+                    }
+                }
+            }
+            Console.ReadLine();
+        }
+
+##Student.cs
+
+	private string studentID;
+        private string fullName;
+        private float averageScore;
+        private string faculty;
+
+        public string StudentID { get => studentID; set => studentID = value; }
+        public string FullName { get => fullName; set => fullName = value; }
+        public float AverageScore { get => averageScore; set => averageScore = value; }
+        public string Faculty { get => faculty; set => faculty = value; }
+
+        public Student() { }
+        public Student(string studentID, string fullName, float averageScore, string faculty)
+        {
+            this.StudentID = studentID;
+            this.FullName = fullName;
+            this.averageScore = averageScore;
+            this.faculty = faculty;
+        }
+        public Student(Student student)
+        {
+            this.StudentID = student.StudentID;
+            this.FullName = student.FullName;
+            this.averageScore = student.averageScore;
+            this.faculty = student.faculty;
+
+        }
+        public void Input()
+        {
+            Console.Write("Nhap MSSV: ");
+            StudentID = Console.ReadLine();
+            Console.Write("Nhap Ho ten sinh vien: ");
+            FullName = Console.ReadLine();
+            Console.Write("Nhap Diem Trung Binh: ");
+            float avg;
+            bool ok = false;
+            do
+            {
+                ok = float.TryParse(Console.ReadLine(), out avg);
+                if (!ok)
+                {
+                    Console.WriteLine("Nhap sai kieu du lieu , vui long nhap lai");
+                    continue;
+                }
+                else
+                {
+                    averageScore = avg;
+                }
+                if(averageScore < 0 || averageScore > 10)
+                {
+                    ok = false;
+                    Console.WriteLine("Vui long nhap diem DTB (0-10)");
+                }
+                else
+                {
+                    ok = true;
+                }
+            } while (!ok || averageScore < 0 || averageScore > 10);
+            Console.Write("Nhap Khoa: ");
+            Faculty = Console.ReadLine();
+
+        }
+        public void Output()
+        {
+            Console.WriteLine("MSSV: {0} | HoTen: {1} | Khoa: {2} | DiemTB: {3}",StudentID, FullName,faculty,averageScore);
+        }
+		
+#Lap01-03
+##Person.cs
+
+	private string iD;
+        private string fullName;
+
+        public Person()
+        {
+
+        }
+
+        public Person(string iD, string fullName)
+        {
+            this.iD = iD;
+            this.fullName = fullName;
+        }
+
+        public string ID { get => iD; set => iD = value; }
+        public string FullName { get => fullName; set => fullName = value; }
+
+        public void Input()
+        {
+            Console.Write("Nhap Ma So: ");
+            ID = Console.ReadLine();
+            Console.Write("Nhap Ho Ten: ");
+            FullName = Console.ReadLine();
+
+        }
+        public void Output()
+        {
+            Console.Write("Ma So: {0} | Ho Ten: {1} | ", ID, FullName);
+        }
+
+##Student.cs
+
+	private float averageScore;
+        private string faculty;
+        public float AverageScore { get => averageScore; set => averageScore = value; }
+        public string Faculty { get => faculty; set => faculty = value; }
+
+        public Student() { }
+        public Student(string iD, string fullName, float averageScore, string faculty) : base(iD, fullName)
+        {
+            AverageScore = averageScore;
+            Faculty = faculty;
+        }
+        public void Input()
+        {
+
+            base.Input();
+            Console.Write("Nhap Diem Trung Binh: ");
+            float avg;
+            bool ok = false;
+            do
+            {
+                ok = float.TryParse(Console.ReadLine(), out avg);
+                if (!ok)
+                {
+                    Console.WriteLine("Nhap sai kieu du lieu , vui long nhap lai");
+                    continue;
+                }
+                else
+                {
+                    averageScore = avg;
+                }
+                if (averageScore < 0 || averageScore > 10)
+                {
+                    ok = false;
+                    Console.WriteLine("Vui long nhap diem DTB (0-10)");
+                }
+                else
+                {
+                    ok = true;
+                }
+            } while (!ok || averageScore < 0 || averageScore > 10);
+            Console.Write("Nhap Khoa: ");
+            Faculty = Console.ReadLine();
+
+        }
+        public void Output()
+        {
+            base.Output();
+            Console.WriteLine("Khoa: {0} | DiemTB: {1}", faculty, averageScore);
+        }
+		
+##Teacher.cs
+
+	private string diaChi;
+
+        public Teacher() { }
+        public Teacher(string ID, string HoTen, string diaChi) : base(ID, HoTen)
+        {
+            this.diaChi = diaChi;
+        }
+
+        public string DiaChi { get => diaChi; set => diaChi = value; }
+        public void Input()
+        {
+            base.Input();
+            Console.Write("Nhap Dia Chi: ");
+            DiaChi = Console.ReadLine();
+
+        }
+        public void Output()
+        {
+            base.Output();
+            Console.WriteLine("Dia Chi: {0}", DiaChi);
+        }
+
+##Program.cs
+
+	static void themSinhVien(List<Student> students)
+        {
+            Console.WriteLine("Nhap Thong tin sinh vien can them");
+            Student student = new Student();
+            student.Input();
+            students.Add(student);
+            Console.WriteLine("Them Thanh Cong");
+        }
+        static void themGiaoVien(List<Teacher> teachers)
+        {
+            Console.WriteLine("Nhap Thong tin giao vien can them");
+            Teacher teacher = new Teacher();
+            teacher.Input();
+            teachers.Add(teacher);
+            Console.WriteLine("Them Thanh Cong");
+        }
+        static void xuatDSSinhVien(List<Student> students)
+        {
+            if (students.Count == 0)
+            {
+                Console.WriteLine("Danh Sach Sinh Vien Rong");
+                return;
+            }
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Sinh Vien -------------");
+            students.ForEach(student =>
+            {
+                student.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatDSGiaoVien(List<Teacher> teachers)
+        {
+            if (teachers.Count == 0)
+            {
+                Console.WriteLine("Danh Sach Giao Vien Rong");
+                return;
+            }
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Giao Vien -------------");
+            teachers.ForEach(teacher =>
+            {
+                teacher.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatSinhVienCNTT(List<Student> students)
+        {
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Sinh Vien Thuoc Khoa CNT -------------");
+            students.ForEach(student =>
+            {
+                if (student.Faculty == "CNTT") student.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatSVCoDTBCaoNhatVaThuocKhoaCNTT(List<Student> students)
+        {
+            Console.WriteLine("------------- Danh Sach Thong Tin Chi Tiet Sinh Vien Co DTB Cao Nhat Va Thuoc Khoa CNTT -------------");
+            float maxDiem = students.Max(student => student.AverageScore);
+            students.ForEach(student =>
+            {
+                if (student.AverageScore == maxDiem && student.Faculty == "CNTT") student.Output();
+            });
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatSoLuongXepLoai(List<Student> students)
+        {
+            Console.WriteLine("------------- So Luong cua tung xep loai trong danh sach sinh vien -------------");
+            int cntXuatSac = students.Count(student => student.AverageScore > 9);
+            int cntGioi = students.Count(student => student.AverageScore <= 9 && student.AverageScore > 8);
+            int cntKha = students.Count(student => student.AverageScore <= 8 && student.AverageScore > 7);
+            int cntTrungBinh = students.Count(student => student.AverageScore <= 7 && student.AverageScore > 5);
+            int cntYeu = students.Count(student => student.AverageScore <= 5 && student.AverageScore > 4);
+            int cntKem = students.Count(student => student.AverageScore <= 4);
+            Console.WriteLine("Xuat Sac: {0}", cntXuatSac);
+            Console.WriteLine("Gioi: {0}", cntGioi);
+            Console.WriteLine("Kha: {0}", cntKha);
+            Console.WriteLine("Trung Binh: {0}", cntTrungBinh);
+            Console.WriteLine("Yeu: {0}", cntYeu);
+            Console.WriteLine("Kem: {0}", cntKem);
+            Console.WriteLine("----------------------------------------------------------------------------------");
+        }
+        static void xuatDSGiaoVienQuan9(List<Teacher> teachers)
+        {
+            Console.WriteLine("------------- Danh sach giao vien co thong tin o quan 9 -------------");
+            teachers.ForEach(teacher =>
+            {
+                if (teacher.DiaChi.Contains("Quan 9")) teacher.Output();
+            });
+            Console.WriteLine("---------------------------------------------------------------------");
+        }
+        static void Main(string[] args)
+        {
+            List<Student> studentList = new List<Student>();
+            List<Teacher> teacherList = new List<Teacher>();
+            bool exit = false;
+
+            while (!exit)
+            {
+                Console.WriteLine("================== Menu =====================");
+                Console.WriteLine("1. Them sinh vien");
+                Console.WriteLine("2. Them Giao Vien");
+                Console.WriteLine("3. Xuat Danh Sach Sinh Vien");
+                Console.WriteLine("4. Xuat Danh Sach Giao Vien");
+                Console.WriteLine("5. So Luong Tung Danh Sach (Tong so sinh vien , giao vien)");
+                Console.WriteLine("6. Xuat Danh Sach Sinh Vien Thuoc Khoa CNTT");
+                Console.WriteLine("7. Xuat Ra Danh Sach Giao Vien Co Dia Chi Chu Thong Tin Quan 9");
+                Console.WriteLine("8. Xuat ra danh sach sinh vien co diem trung binh cao nhat va thuoc khoa CNTT");
+                Console.WriteLine("9. So Luong cua tung xep loai trong danh sach sinh vien");
+                Console.WriteLine("0. Thoat");
+                Console.WriteLine("Chon chuc nang (0-9):");
+                Console.WriteLine("==============================================");
+                string choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "0":
+                        exit = true;
+                        break;
+                    case "1":
+                        themSinhVien(studentList);
+                        break;
+                    case "2":
+                        themGiaoVien(teacherList);
+                        break;
+                    case "3":
+                        xuatDSSinhVien(studentList);
+                        break;
+                    case "4":
+                        xuatDSGiaoVien(teacherList);
+                        break;
+                    case "5":
+                        Console.WriteLine("-------------------------------------------------");
+                        Console.WriteLine("Tong So Sinh Vien: {0}", studentList.Count);
+                        Console.WriteLine("Tong So Giao Vien: {0}", teacherList.Count);
+                        Console.WriteLine("-------------------------------------------------");
+                        break;
+                    case "6":
+                        xuatSinhVienCNTT(studentList);
+                        break;
+                    case "7":
+                        xuatDSGiaoVienQuan9(teacherList);
+                        break;
+                    case "8":
+                        xuatSVCoDTBCaoNhatVaThuocKhoaCNTT(studentList);
+                        break;
+                    case "9":
+                        xuatSoLuongXepLoai(studentList);
+                        break;
+                    default:
+                        {
+                            Console.WriteLine("Khong co lua chon nay , vui long nhap lai");
+                            break;
+                        }
+                }
+            }
+        }
